@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:salon/ApiCalls/ApiCalls.dart';
 import 'package:salon/UI/profile/User_profile_screen.dart';
 
@@ -16,6 +17,29 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   ApiCalls _apiCalls =ApiCalls();
+  final GlobalKey<LiquidPullToRefreshState> _globalKey =new GlobalKey<LiquidPullToRefreshState>();
+  List shopdata =[];
+  late Future <List> _future;
+
+  Future<List>_handle ()
+  async
+  {
+    shopdata = await _apiCalls.getAllShop() as List;
+    print(shopdata);
+    setState(()=>this.shopdata= shopdata);
+    return shopdata;
+
+
+  }
+
+
+  @override
+  void initState() {
+    _handle();
+    // _future =_apiCalls.getAllShop();
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,9 +81,11 @@ class _HomepageState extends State<Homepage> {
         ),
 
         appBar: AppBar(
-          backgroundColor: Color(0xff201d43),
+          //backgroundColor: Color(0xff201d43),
+          backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
-         // elevation: 0,
+          elevation: 0,
+
            title:  Stack(
              children:[ Padding(
                padding: const EdgeInsets.only(top: 1,bottom: 1,left: 0.5),
@@ -81,8 +107,8 @@ class _HomepageState extends State<Homepage> {
                              backgroundImage: AssetImage('assets/images/AppLogo.jpg'),),
                          ),
 
-                         title: Text("${map["u_fn"]} ${map["u_ln"]}",style: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),),
-                         subtitle: Text(map["u_mn"],style: TextStyle(color: Colors.white),),
+                         title: Text("${map["u_fn"]} ${map["u_ln"]}",style: TextStyle(fontWeight: FontWeight.w500,color: Colors.black),),
+                         subtitle: Text(map["u_mn"],style: TextStyle(color: Colors.black),),
                        );
                      }
                      else
@@ -101,6 +127,7 @@ class _HomepageState extends State<Homepage> {
        body:
           Column(
               children: [
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
@@ -143,47 +170,66 @@ class _HomepageState extends State<Homepage> {
                   thickness: 2,
                 ),
 
-               Expanded(
-                    child: FutureBuilder(
-                      future: _apiCalls.getAllShop(),
-                      builder: (context,snapshot) {
+               LiquidPullToRefresh(
+                 color: Colors.deepPurpleAccent[200],
+                 height: 150,
+                 animSpeedFactor: 2,
+                 showChildOpacityTransition:false,
 
-                        return Card(
-                        margin: EdgeInsets.symmetric(
-                        horizontal: 5, vertical: 5),
-                          child:ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data?.length,
-                            itemBuilder: (context, i){
+                 onRefresh:(){
+                   setState(() {
 
-                              return  Card(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: AssetImage('assets/images/salon.jpg'),
-                                  ),
-                                  title: Text(snapshot.data![i]["sp_nm"].toString()),
-                                  subtitle: Text(snapshot.data![i]["sp_act_sts"].toString()),
-                                  trailing: Text('30 min'),
-                                  onTap: (){
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const ShopInfo()),
-                                    );
+                   });
+                   return _handle();
 
-                                  },
-                                ),
+                 },
+                 child: Container(
+                   height: 540,
+                   child: Expanded(
+                        child: FutureBuilder(
+                          future: _apiCalls.getAllShop(),
+                          builder: (context,snapshot) {
 
-                              );
-                            }),
+                            return Card(
+                              color: Colors.tealAccent.shade100,
+                            margin: EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 5),
+                              child:ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: snapshot.data?.length,
+                                itemBuilder: (context, i){
+                                  print(snapshot.data);
+                                  return  Card(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    color: Colors.grey.shade100,
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        backgroundImage: AssetImage('assets/images/salon.jpg'),
+                                      ),
+                                      title: Text(snapshot.data![i]["sp_nm"].toString()),
+                                      subtitle: Text(snapshot.data![i]["sp_act_sts"].toString()),
+                                      trailing: Text('30 min'),
+                                      onTap: (){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) =>  ShopInfo()),
+                                        );
+
+                                      },
+                                    ),
+
+                                  );
+                                }),
 
 
     );
     }
-                        ),
-                      ),
+                            ),
+                          ),
+                 ),
+               ),
 
 
 
