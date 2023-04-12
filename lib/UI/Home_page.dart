@@ -167,7 +167,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                 ),
                 Divider(
-                  thickness: 2,
+                  thickness: 1,
                 ),
 
                LiquidPullToRefresh(
