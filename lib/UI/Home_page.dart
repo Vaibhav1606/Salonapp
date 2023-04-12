@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:salon/ApiCalls/ApiCalls.dart';
 import 'package:salon/UI/profile/User_profile_screen.dart';
 
 import 'Shop_Display_pages/one_shop_info.dart';
 import 'firstPage.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({Key? key}) : super(key: key);
+  var uph;
+ Homepage({Key? key,required this.uph}) : super(key: key);
 
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
+  ApiCalls _apiCalls =ApiCalls();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -57,123 +60,137 @@ class _HomepageState extends State<Homepage> {
           backgroundColor: Color(0xff201d43),
           automaticallyImplyLeading: false,
          // elevation: 0,
-           title:  Padding(
-             padding: const EdgeInsets.only(top: 1,bottom: 1,left: 0.5),
-             child: ListTile(
-                 minVerticalPadding:15.0,
-                leading: InkWell(
-                  onTap: ()
-                  {
-                  },
-                  child:  CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Colors.tealAccent,
+           title:  Stack(
+             children:[ Padding(
+               padding: const EdgeInsets.only(top: 1,bottom: 1,left: 0.5),
+               child:
+               FutureBuilder<dynamic>(
+                   future: _apiCalls.getOneUser(widget.uph),
+                   builder:(context ,snapshot){
 
-                    child: CircleAvatar(
-                      radius:25 ,
-                      backgroundImage: AssetImage('assets/images/AppLogo.jpg'),
-                    ),
-                  ) ,
-                ),
-                title:Text('Ajit Jadhav',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white) ),
-                subtitle: Text("location",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
-              //  trailing: Text('',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                     Map< String,dynamic> map =snapshot.data;
+
+                     if(snapshot.hasData)
+                     {
+                       return ListTile(
+                         leading: CircleAvatar(
+                           radius: 28,
+                           backgroundColor: Colors.teal,
+                           child: CircleAvatar(
+                             radius: 25,
+                             backgroundImage: AssetImage('assets/images/AppLogo.jpg'),),
+                         ),
+
+                         title: Text("${map["u_fn"]} ${map["u_ln"]}",style: TextStyle(fontWeight: FontWeight.w500,color: Colors.white),),
+                         subtitle: Text(map["u_mn"],style: TextStyle(color: Colors.white),),
+                       );
+                     }
+                     else
+                     {
+                       return Text(snapshot.error.toString());
+                     }
 
 
-              ),
+                   }
+
+               ),
+             ),
+        ]
            )
         ),
        body:
           Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
 
-                  height: 50,
-                  //margin: EdgeInsets.only(left: 30,right: 30),
-                  width: double.infinity,
-                  child: TextField(
+                    height: 50,
+                    //margin: EdgeInsets.only(left: 30,right: 30),
+                    width: double.infinity,
+                    child: TextField(
 
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search',
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(11),
-                        borderSide: BorderSide(
-                            color: Colors.black45,
-                            width: 2
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        hintText: 'Search',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(11),
+                          borderSide: BorderSide(
+                              color: Colors.black45,
+                              width: 2
+
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(11),
+                            borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 2
+                            )
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(11),
+                            borderSide: BorderSide(
+                                color: Colors.grey
+                            )
 
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(11),
-                          borderSide: BorderSide(
-                              color: Colors.grey,
-                              width: 2
-                          )
-                      ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(11),
-                          borderSide: BorderSide(
-                              color: Colors.grey
-                          )
-
                       ),
                     ),
                   ),
                 ),
-              ),
-              Divider(
-                thickness: 2,
-              ),
+                Divider(
+                  thickness: 2,
+                ),
 
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                    itemBuilder: (context,index)
-                  {
+               Expanded(
+                    child: FutureBuilder(
+                      future: _apiCalls.getAllShop(),
+                      builder: (context,snapshot) {
 
-                    return InkWell(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const ShopInfo()),
-                        );
-                      },
-                      child: Card(
+                        return Card(
                         margin: EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        child: ListTile(
-                          leading:CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AssetImage('assets/images/AppLogo.jpg'),
-                          ),
-                          title:Text('Shop Name' ),
-                          subtitle: Text('Location'),
-                          trailing: Text('Status'),
-                          focusColor: Colors.black,
+                        horizontal: 5, vertical: 5),
+                          child:ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (context, i){
+
+                              return  Card(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: AssetImage('assets/images/salon.jpg'),
+                                  ),
+                                  title: Text(snapshot.data![i]["sp_nm"].toString()),
+                                  subtitle: Text(snapshot.data![i]["sp_act_sts"].toString()),
+                                  trailing: Text('30 min'),
+                                  onTap: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const ShopInfo()),
+                                    );
+
+                                  },
+                                ),
+
+                              );
+                            }),
 
 
+    );
+    }
                         ),
                       ),
-                    );
-
-                  },
-                    itemCount: 20,
-                    // separatorBuilder: (context,index){
-                    //   return Divider(height: 50,thickness: 10,);
 
 
-                  ),
-                ),
-              )
 
-            ],
-          ),
+
+              ],
+            ),
+
 
 
       ),

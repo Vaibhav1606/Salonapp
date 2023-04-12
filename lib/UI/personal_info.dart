@@ -224,10 +224,10 @@ import 'package:salon/UI/Home_page.dart';
                           onPressed: ()
                           {
                             print("button pressed");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const Homepage()),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => const Homepage(uph: ,)),
+                            // );
 
                           },
                           child: Text('Save',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white))

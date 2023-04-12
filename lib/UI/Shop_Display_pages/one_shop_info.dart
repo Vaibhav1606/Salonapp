@@ -1,6 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+
+import 'package:provider/provider.dart';
+import 'package:salon/booking/cartmodel.dart';
+
+
+import 'Booking_info.dart';
 class ShopInfo extends StatefulWidget {
   const ShopInfo({Key? key}) : super(key: key);
 
@@ -9,7 +15,27 @@ class ShopInfo extends StatefulWidget {
 }
 
 class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
+
+
   @override
+
+
+
+  //  Map<String ,dynamic>menu ={'hair cut':'40'};
+  // Map<String ,String>myAppMenu(Map <String ,List<String>>map){
+  //   var newMenu=<String ,String>{};
+  //   for(var entry in map.entries)
+  //     {
+  //      List keylist=entry.key as List<String>;
+  //       for(var key in keylist)
+  //         {
+  //          newMenu[key]=entry.value.toString();
+  //         }
+  //     }
+  //   return newMenu;
+  // }
+  // // var mymap =myAppMenu({"hairCut" :["20","30 min"]});
+  // Map<String,dynamic> addlist ={};
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 4, vsync: this);
     return Scaffold(
@@ -22,7 +48,7 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
         // title: Text('Profile',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white)),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 10,bottom: 10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             CarouselSlider( options: CarouselOptions(
@@ -72,7 +98,18 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('4.5 *****',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black)),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('4.5',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black)),
+                      Icon(Icons.star,color: Colors.orange),
+                      Icon(Icons.star,color: Colors.orange),
+                      Icon(Icons.star,color: Colors.orange),
+                      Icon(Icons.star,color: Colors.orange),
+                      Icon(Icons.star_half,color: Colors.orange),
+                    ],
+                  ),
                   Icon(Icons.favorite_border)
                 ],
               ),
@@ -113,9 +150,12 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: TabBar(
-                  indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.orange,
+                  indicator: UnderlineTabIndicator(
+                      borderSide: BorderSide(
+                          width: 5,
+                          color: Colors.blueGrey
+
+                      )
                   ),
                   controller: tabController,
                   isScrollable: true,
@@ -161,8 +201,10 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
 
                 child: TabBarView(
                   controller: tabController,
+
                   children: [
                     //   Icon(Icons.sort ),
+
                     Column(
                       children: [
                         Container(
@@ -235,7 +277,7 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
                             Container(
                               height: 100,
                               width: 100,
-                              child: Image(image: AssetImage('assets/images/map.png'),),
+                              child: Image(image: AssetImage('assets/images/salon.jpg'),),
                             )
 
                           ],
@@ -243,29 +285,77 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
 
 
                         const Divider(
+
                           thickness: 2,
                         ),
 
                       ],
                     ),
-                    ListView.builder(
-                        physics: BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: AssetImage('assets/images/salon.jpg'),
-                                ),
-                                title: Text('Cutting'),
-                                subtitle: Text('2000'),
-                                trailing: Icon(Icons.add_circle_outline_outlined,color: Colors.lightBlue,)
-                            ),
-                          );
-                        }),
+                    Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Consumer<CartModel>(
+                            builder: (context,value,child) {
+                              return ListView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: value.menu.length,
+                                  itemBuilder: (context, index) {
+                                    return Card(
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 15),
+                                      elevation: 2,
+                                      color: Colors.grey.shade100,
+                                      child: ListTile(
+                                          title: Text(value.menu[index][0].toString(),style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1,
+                                            fontSize: 20
+                                          ),),
+                                          subtitle: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  child: Text("Price: ${value.menu[index][1]}",style: TextStyle(fontWeight: FontWeight.bold),),
+                                                  
+                                                ),
+                                                SizedBox(width: 50,),
+                                                Container(
+                                                  child: Text("Time: ${value.menu[index][2]}",style: TextStyle(fontWeight: FontWeight.bold),),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          trailing: InkWell(child: Icon(
+                                            Icons.add_circle_outline_outlined,
+                                            color: Colors.lightBlue,
+                                          ),
+                                            onTap: () {
+                                            Provider.of<CartModel>(context,listen:false).addItemToCart(index);
+                                            print("added");
+
+                                            },)
+                                      ),
+                                    );
+                                  });
+                            }
+                          ),
+                          Container(
+                              width: double.infinity,
+                              child: ElevatedButton(onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const bookingInfo()),
+                                );
+
+                              }, child: Text('Next'))
+                          )
+                        ]
+                    ),
+
                     Center(
                         child:  Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -286,41 +376,42 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
                         )
                     ),
                     GridView.count(crossAxisCount: 2,
+
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Image.asset('assets/images/1.jpg'),
+                            child: Image.asset('assets/images/1.jpg',fit: BoxFit.cover),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Image.asset('assets/images/2.jpg'),
+                            child: Image.asset('assets/images/2.jpg',fit: BoxFit.cover),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Image.asset('assets/images/3.jpg'),
+                            child: Image.asset('assets/images/3.jpg',fit: BoxFit.cover),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Image.asset('assets/images/4.jpg'),
+                            child: Image.asset('assets/images/4.jpg',fit: BoxFit.cover),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Image.asset('assets/images/salon.jpg'),
+                            child: Image.asset('assets/images/salon.jpg',fit: BoxFit.cover),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            child: Image.asset('assets/images/AppLogo.jpg'),
+                            child: Image.asset('assets/images/AppLogo.jpg',fit: BoxFit.cover),
                           ),
                         )
                       ],

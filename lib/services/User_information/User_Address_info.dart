@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../ApiCalls/ApiCalls.dart';
 import '../../UI/Home_page.dart';
+import '../../UI/profile/User_profile_screen.dart';
 import '../../model/user.dart';
 
 class UserAddress extends StatefulWidget {
@@ -230,11 +231,13 @@ class _UserAddressState extends State<UserAddress> {
                               if (_formKey.currentState!.validate()) {
                                 setState(() {
                                   isClicked = true;
-                                  flag=true;
                                 }
                                 );
 
                               }
+                              print(widget.mobileNumber);
+                              Navigator.push(context,MaterialPageRoute(builder: (context)=>Homepage(uph: widget.mobileNumber)));
+
                             },
 
                             style: ButtonStyle(
@@ -269,6 +272,7 @@ class _UserAddressState extends State<UserAddress> {
                                       upin: pinController.text,
                                       ulandmark: LandmarkController.text))),
                           builder: (context, snapshot) {
+                            debugPrint(snapshot.data.toString());
                             if (snapshot.hasData) {
                               if (snapshot.data == "") {
                                 return Center(
@@ -277,7 +281,6 @@ class _UserAddressState extends State<UserAddress> {
                                       style: TextStyle(color: Colors.red),
                                     ));
                               }
-// User user=welcomeFromJson(snapshot.data.toString());
                               return Column(
                                 crossAxisAlignment:
                                 CrossAxisAlignment.center,

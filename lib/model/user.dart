@@ -19,7 +19,7 @@ class User {
     uft = json['u_fn'];
     ult = json['u_ln'];
     uemail = json['u_em'];
-    uad = json['u_addr'] != null ? UAd?.fromJson(json['u_ad']) : null;
+    uad = json['u_addr'] != null ? UAd?.fromJson(json['u_addr']) : null;
    // ufav = json['u_fav'];
   }
 

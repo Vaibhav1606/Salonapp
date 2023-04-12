@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:salon/UI/Splash_Screen.dart';
+import 'package:salon/booking/cartmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,17 +14,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return ChangeNotifierProvider(
+      create: (context)=>CartModel(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
 
-      title: 'Flutter Demo',
+        title: 'Flutter Demo',
 
-      theme: ThemeData(
+        theme: ThemeData(
 
-        primarySwatch: Colors.indigo,
-       // brightness: Brightness.dark
+          primarySwatch: Colors.indigo,
+         // brightness: Brightness.dark
+        ),
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }
