@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:salon/ApiCalls/ApiCalls.dart';
+import 'package:salon/ApiCalls/ShopApi.dart';
 import 'package:salon/UI/profile/User_profile_screen.dart';
 
 import 'Shop_Display_pages/one_shop_info.dart';
@@ -17,6 +18,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   ApiCalls _apiCalls =ApiCalls();
+  ShopApi _shopApi =ShopApi();
   final GlobalKey<LiquidPullToRefreshState> _globalKey =new GlobalKey<LiquidPullToRefreshState>();
   List shopdata =[];
   late Future <List> _future;
@@ -24,8 +26,8 @@ class _HomepageState extends State<Homepage> {
   Future<List>_handle ()
   async
   {
-    shopdata = await _apiCalls.getAllShop() as List;
-    print(shopdata);
+    shopdata = await _shopApi.getAllShop() as List;
+    print("shopdata ${shopdata}");
     setState(()=>this.shopdata= shopdata);
     return shopdata;
 
@@ -125,117 +127,118 @@ class _HomepageState extends State<Homepage> {
            )
         ),
        body:
-          Column(
-              children: [
+         Column(
+                  children: [
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
 
-                    height: 50,
-                    //margin: EdgeInsets.only(left: 30,right: 30),
-                    width: double.infinity,
-                    child: TextField(
+                        height: 50,
+                        //margin: EdgeInsets.only(left: 30,right: 30),
+                        width: double.infinity,
+                        child: TextField(
 
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        hintText: 'Search',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(11),
-                          borderSide: BorderSide(
-                              color: Colors.black45,
-                              width: 2
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search),
+                            hintText: 'Search',
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(11),
+                              borderSide: BorderSide(
+                                  color: Colors.black45,
+                                  width: 2
 
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(11),
+                                borderSide: BorderSide(
+                                    color: Colors.grey,
+                                    width: 2
+                                )
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(11),
+                                borderSide: BorderSide(
+                                    color: Colors.grey
+                                )
+
+                            ),
                           ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(11),
-                            borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 2
-                            )
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(11),
-                            borderSide: BorderSide(
-                                color: Colors.grey
-                            )
-
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Divider(
-                  thickness: 1,
-                ),
 
-               LiquidPullToRefresh(
-                 color: Colors.deepPurpleAccent[200],
-                 height: 150,
-                 animSpeedFactor: 2,
-                 showChildOpacityTransition:false,
 
-                 onRefresh:(){
-                   setState(() {
+                   SingleChildScrollView(
+                     child: LiquidPullToRefresh(
+                       color: Colors.deepPurpleAccent[200],
+                       height: 100,
+                       animSpeedFactor: 2,
+                       showChildOpacityTransition:false,
 
-                   });
-                   return _handle();
+                       onRefresh:(){
+                         setState(() {
 
-                 },
-                 child: Container(
-                   height: 540,
-                   child: Expanded(
-                        child: FutureBuilder(
-                          future: _apiCalls.getAllShop(),
-                          builder: (context,snapshot) {
+                         });
+                         return _handle();
 
-                            return Card(
-                              color: Colors.tealAccent.shade100,
-                            margin: EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 5),
-                              child:ListView.builder(
-                                physics: BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: snapshot.data?.length,
-                                itemBuilder: (context, i){
-                                  print(snapshot.data);
-                                  return  Card(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 10),
-                                    color: Colors.grey.shade100,
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundImage: AssetImage('assets/images/salon.jpg'),
-                                      ),
-                                      title: Text(snapshot.data![i]["sp_nm"].toString()),
-                                      subtitle: Text(snapshot.data![i]["sp_act_sts"].toString()),
-                                      trailing: Text('30 min'),
-                                      onTap: (){
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) =>  ShopInfo()),
-                                        );
+                       },
+                       child: Container(
+                             height: 540,
+                             child: FutureBuilder(
+                               future: _shopApi.getAllShop(),
+                               builder: (context,snapshot) {
 
-                                      },
-                                    ),
+                                 return Card(
+                                   color: Colors.tealAccent.shade100,
+                                 margin: EdgeInsets.symmetric(
+                                 horizontal: 5, vertical: 5),
+                                   child:ListView.builder(
+                                     physics: BouncingScrollPhysics(),
+                                     shrinkWrap: true,
+                                     itemCount: snapshot.data?.length,
+                                     itemBuilder: (context, i){
 
-                                  );
-                                }),
+                                       return  Card(
+                                         margin: EdgeInsets.symmetric(
+                                             horizontal: 20, vertical: 10),
+                                         color: Colors.grey.shade100,
+                                         child: ListTile(
+                                           leading: CircleAvatar(
+                                             backgroundImage: AssetImage('assets/images/salon.jpg'),
+                                           ),
+                                           title: Text(snapshot.data![i]["sp_nm"].toString()),
+                                           subtitle: Text(snapshot.data![i]["sp_act_sts"].toString()),
+                                           trailing: Text('30 min'),
+                                           onTap: (){
+                                             print(snapshot.data![i]["sp_id"]);
+                                             Navigator.push(
+                                               context,
+                                               MaterialPageRoute(builder: (context) =>  ShopInfo(shopId: snapshot.data![i]["sp_id"],)),
+                                             );
+
+                                           },
+                                         ),
+
+                                       );
+                                     }),
 
 
     );
     }
-                            ),
-                          ),
-                 ),
-               ),
+                                 ),
+                           ),
+                     ),
+                   ),
 
 
 
 
-              ],
-            ),
+
+                  ],
+                ),
+
 
 
 

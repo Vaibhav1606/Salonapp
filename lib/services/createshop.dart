@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:salon/ApiCalls/ShopApi.dart';
 
 import '../ApiCalls/ApiCalls.dart';
 import '../UI/Owner_UI/O_Home_Page.dart';
@@ -26,6 +27,7 @@ class _CreateState extends State<Create> {
   final desController = TextEditingController();
   ApiCalls _apiCalls = ApiCalls();
    late Shop shop;
+   ShopApi _shopApi  =ShopApi();
 
   bool isClicked = false;
 
@@ -326,7 +328,7 @@ class _CreateState extends State<Create> {
                   ),
                   (isClicked)
                       ? FutureBuilder(
-                    future: _apiCalls.createShop(Shop(
+                    future: _shopApi.createShop(Shop(
                         sp_nm :shopNameController.text,
                         mobileNumber : mobileController.text,
                         sp_addr: Address(

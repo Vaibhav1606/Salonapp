@@ -7,9 +7,13 @@ import '../model/shop.dart';
 import '../model/user.dart';
 Future<User>? _futureUser;
 late User user;
+late Shop shop;
+
 
 class ApiCalls {
   var client = http.Client();
+
+
 
   Future<dynamic>createUser( User user) async {
     var head = ({
@@ -34,28 +38,6 @@ class ApiCalls {
   }
 
 
-  Future<dynamic> createShop(Shop shop) async {
-    var head = ({
-      "Accept": "application/json",
-      "content-type": "application/json"
-    });
-    var _payload = jsonEncode(shop);
-    var Url = Uri.parse(Repository.createshop);
-    print(Url);
-    print("name");
-    var response = await client.post(
-        Url, headers: head, body: _payload);
-
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.statusCode);
-      print(" ok");
-
-      return  jsonDecode(response.body);
-    } else {
-      return "";
-    }
-  }
 
   Future<dynamic> getOneUser(String uph) async {
 
@@ -72,31 +54,6 @@ class ApiCalls {
       return "";
     }
   }
-  Future<List>getAllShop ()
-  async {
-    List shopdata =[];
-    var head = ({"Accept": "application/json", "content-type": "application/json"});
-    var Url =Uri.parse(Repository.getAllShop);
-    print(Url);
-    http.Response response =await client.get(Url);
-    var res=jsonDecode(response.body);
 
 
-    // print("object");
-    // print(res);
-    if(response.statusCode ==200)
-    {
-
-      //return res.map((job) => new Shop.fromJson(job)).toList();
-      for(Map<String,dynamic> i in res)
-      {
-        shopdata.add(i);
-
-      }
-      print(shopdata.length);
-    }
-    return shopdata;
-
-
-  }
 }

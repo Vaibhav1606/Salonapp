@@ -10,4 +10,5 @@ class Repository
   static String removefav =BaseUrl+'/user/fav/remove';
   static String createshop =BaseUrl+'/shop';
   static String getAllShop =BaseUrl+'/shops';
+  static String getOneShop =BaseUrl+'/shop';
 }
