@@ -307,7 +307,7 @@ class _CreateState extends State<Create> {
                         }
                               Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const Owner()),
+                              MaterialPageRoute(builder: (context) =>  Owner(shopId:null ,)),
                               );
 
                       },
@@ -343,7 +343,10 @@ class _CreateState extends State<Create> {
                               ),
                     ),
                     builder: (context, snapshot) {
+                      print(snapshot.data);
+                      Map<String ,dynamic > map =snapshot.data;
                       if (snapshot.hasData) {
+
                         if (snapshot.data == "") {
                           return Center(
                               child: Text(
@@ -351,14 +354,14 @@ class _CreateState extends State<Create> {
                                 style: TextStyle(color: Colors.red),
                               ));
                         }
-                        // User user=welcomeFromJson(snapshot.data.toString());
+
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              "Name :" +
-                                  snapshot.data.sp_nm,
+                              "Name : ${map["sp_nm"]} ",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),

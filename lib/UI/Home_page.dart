@@ -46,6 +46,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor:Color(0xffD9FCFC),
         //extendBodyBehindAppBar: true,
         bottomNavigationBar: Container(
@@ -92,7 +93,7 @@ class _HomepageState extends State<Homepage> {
              children:[ Padding(
                padding: const EdgeInsets.only(top: 1,bottom: 1,left: 0.5),
                child:
-               FutureBuilder<dynamic>(
+               FutureBuilder(
                    future: _apiCalls.getOneUser(widget.uph),
                    builder:(context ,snapshot){
 
@@ -110,7 +111,7 @@ class _HomepageState extends State<Homepage> {
                          ),
 
                          title: Text("${map["u_fn"]} ${map["u_ln"]}",style: TextStyle(fontWeight: FontWeight.w500,color: Colors.black),),
-                         subtitle: Text(map["u_mn"],style: TextStyle(color: Colors.black),),
+                         subtitle: Text(snapshot.data["u_mn"],style: TextStyle(color: Colors.black),),
                        );
                      }
                      else
@@ -185,7 +186,7 @@ class _HomepageState extends State<Homepage> {
 
                        },
                        child: Container(
-                             height: 540,
+                             height: 558,
                              child: FutureBuilder(
                                future: _shopApi.getAllShop(),
                                builder: (context,snapshot) {
@@ -197,7 +198,7 @@ class _HomepageState extends State<Homepage> {
                                    child:ListView.builder(
                                      physics: BouncingScrollPhysics(),
                                      shrinkWrap: true,
-                                     itemCount: snapshot.data?.length,
+                                     itemCount: snapshot.data!.length,
                                      itemBuilder: (context, i){
 
                                        return  Card(

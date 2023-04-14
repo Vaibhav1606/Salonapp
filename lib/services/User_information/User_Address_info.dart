@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../ApiCalls/ApiCalls.dart';
@@ -41,6 +44,7 @@ class _UserAddressState extends State<UserAddress> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text("User Address"),
         ),
@@ -230,9 +234,11 @@ class _UserAddressState extends State<UserAddress> {
 
                               if (_formKey.currentState!.validate()) {
                                 setState(() {
+
                                   isClicked = true;
                                 }
                                 );
+                                print("enter in onpressed");
 
                               }
                               print(widget.mobileNumber);
@@ -272,7 +278,8 @@ class _UserAddressState extends State<UserAddress> {
                                       upin: pinController.text,
                                       ulandmark: LandmarkController.text))),
                           builder: (context, snapshot) {
-                            debugPrint(snapshot.data.toString());
+                            print(" user data ${snapshot.data}");
+
                             if (snapshot.hasData) {
                               if (snapshot.data == "") {
                                 return Center(
@@ -287,29 +294,24 @@ class _UserAddressState extends State<UserAddress> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Name :" +
-                                        snapshot.data.uft +
-                                        " " +
-                                        snapshot.data.ult,
-                                    style: TextStyle(
+                                    "Name :${snapshot.data["u_fn"]} ${snapshot.data["u_ln"]}",
+                                    style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
-                                    "E-mail: " + snapshot.data.uemail,
-                                    style: TextStyle(fontSize: 16),
-                                  )
                                 ]
                               );
                             } else if (snapshot.hasError) {
-                              print(snapshot.error);
+                              if (kDebugMode) {
+                                debugPrintStack(label: snapshot.error.toString());
+                              }
                               return Center(
                                   child: Text("Something Went Wrong"));
                             }
                             return CircularProgressIndicator();
                           },
                         )
-                            : Text("")
+                            : Text("heloow my friends")
                       ]),
                     ),
                   ),

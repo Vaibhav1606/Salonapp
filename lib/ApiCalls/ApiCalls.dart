@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:salon/repository/repository.dart';
 import 'package:http/http.dart ' as http;
@@ -24,13 +25,11 @@ class ApiCalls {
     var _payload = jsonEncode(user);
     var Url = Uri.parse(Repository.createuser);
     print(Url);
-    print("below url");
     http.Response response = await client.post(
         Url, headers: head, body: _payload);
-    print("below post");
+      log("enter in create api");
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(response.statusCode);
-      print(response.body.toString());
+      log("getting response of creating user");
       return User.fromJson(jsonDecode(response.body));
     } else {
       return "";
@@ -44,10 +43,9 @@ class ApiCalls {
     var Url = Uri.parse(Repository.getOne+"/${uph}");
     print(Url);
     http.Response response = await client.get(Url);
-    print('status ok');
+    log("enter in  getOneUser api");
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print('status ok');
-      print("bhjsjdj" + response.body.toString());
+      log("getting response of getOneUser");
       return jsonDecode(response.body);
 
     } else {

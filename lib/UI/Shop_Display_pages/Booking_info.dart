@@ -82,7 +82,7 @@ class _bookingInfoState extends State<bookingInfo> {
                               trailing: InkWell(
                                 child: Icon(
                                   Icons.cancel_rounded,
-                                  color: Colors.lightBlue,
+                                  color: Colors.red,
                                 ),
                                 onTap: () {
                                   Provider.of<CartModel>(context, listen: false)

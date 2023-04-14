@@ -36,7 +36,7 @@ class  Shop {
   Map<String, dynamic> toJson() =>
       {
         "sp_nm": sp_nm,
-        "sp_addr": sp_addr,
+        "sp_addr": sp_addr!.toJson(),
         "mobileNumber": mobileNumber,
         //"sp_pts":sp_pts,
         //"sp_loc": sp_loc,

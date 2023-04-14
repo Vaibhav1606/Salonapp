@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
@@ -44,10 +45,6 @@ class ShopApi
     print(Url);
     http.Response response =await client.get(Url);
     var res=jsonDecode(response.body);
-
-
-    // print("object");
-    // print(res);
     if(response.statusCode ==200)
     {
 
@@ -68,9 +65,9 @@ class ShopApi
     var Url = Uri.parse(Repository.getOneShop+"/${shopId}");
     print(Url);
     http.Response response = await client.get(Url);
-    print('status ok');
+    log("status ok");
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print('status ok');
+      log('enter in response');
       return jsonDecode(response.body);
 
     } else {

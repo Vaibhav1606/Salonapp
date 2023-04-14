@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CartModel extends ChangeNotifier
 {
   //[menuitem , price , menu time]
-  List _menu =[
+  final List _menu = [
     ["hair cut -Premier Stylist" ,"150","30 "],
     ["Hair Cut -Top Style","200","45"],
     ["Hair Tattoo","500","45"],
@@ -11,7 +11,8 @@ class CartModel extends ChangeNotifier
     ["Head Massage","100","30 "],
     ["Beard Trim","60","30"],
     ["Beard design","100","30 "],
-    ["Hair Wash And Conditioning ","500"," 160"]
+    ["Hair Wash And Conditioning ","500"," 160"],
+    ["Beard -Top Style","203","60"],
   ];
 
   //list for cart items

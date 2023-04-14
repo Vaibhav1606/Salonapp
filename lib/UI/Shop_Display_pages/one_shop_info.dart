@@ -18,6 +18,7 @@ class ShopInfo extends StatefulWidget {
 
 class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
   ShopApi  _shopApi=ShopApi();
+ late bool click =true;
   @override
 
   //  Map<String ,dynamic>menu ={'hair cut':'40'};
@@ -220,7 +221,7 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
                                       height: 10,
                                       width: 10,
                                     ),
-                                    Text('Open Time: ${oneShop["sp_opn_tm"]}',
+                                    Text('Open : ${oneShop["sp_opn_tm"]}',
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -229,7 +230,7 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
                                       height: 10,
                                       width: 20,
                                     ),
-                                    Text('Close Time:${oneShop["sp_cls_tm"]}',
+                                    Text('Close : ${oneShop["sp_cls_tm"]}',
                                         style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -354,45 +355,60 @@ class _ShopInfoState extends State<ShopInfo> with TickerProviderStateMixin {
                                             ],
                                           ),
                                         ),
-                                        trailing: InkWell(
-                                          child: Icon(
-                                            Icons.add_circle_outline_outlined,
-                                            color: Colors.lightBlue,
-                                          ),
-                                          onTap: () {
-                                            Provider.of<CartModel>(context,
-                                                listen: false)
-                                                .addItemToCart(index);
-                                            print("added");
+                                        trailing:InkWell(
+                                          onTap: (){
+                                            if( value.cartlist.contains(value.menu[index]))
+                                              {
+                                                Provider.of<CartModel>(context,listen: false).removeItemToCart(index);
+                                              }
+                                            else
+                                              {
+                                                Provider.of<CartModel>(context,listen: false).addItemToCart(index);
+                                              }
+
+
                                           },
-                                        )),
+                                          child:(value.cartlist.contains(value.menu[index])?
+                                           IconButton(icon: Icon(Icons.cancel_rounded,color: Colors.red), onPressed: () {   Provider.of<CartModel>(context,listen: false).removeItemToCart(index);},): Icon(Icons.add_circle_outlined
+                                        )
+
+                                        )
+                                    ),
+                                    )
                                   );
-                                });
+                                }
+                                );
                           }),
-                          Container(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const bookingInfo()),
-                                    );
-                                  },
-                                  child: Text('Next')))
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              FloatingActionButton(
+                           child: Icon(Icons.bookmark_added_outlined),
+                            onPressed: (){
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const bookingInfo()),
+                              );
+
+                              }
+                              ),
+
+                            ],
+                          )
                         ]),
 
                         Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('4.3',
+                                const Text('4.3',
                                     style: TextStyle(
                                         fontSize: 70, color: Colors.grey)),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     Icon(Icons.star, color: Colors.orange,
                                         size: 50),
                                     Icon(Icons.star, color: Colors.orange,

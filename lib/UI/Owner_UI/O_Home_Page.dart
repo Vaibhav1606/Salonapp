@@ -1,19 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:salon/ApiCalls/ShopApi.dart';
 
 import '../Shop_Display_pages/one_shop_info.dart';
 import '../profile/User_profile_screen.dart';
 import 'O_profile/O_profile_screen.dart';
 
 class Owner extends StatefulWidget {
-  const Owner({Key? key}) : super(key: key);
+  var shopId;
+   Owner({Key? key,required this.shopId}) : super(key: key);
 
   @override
   State<Owner> createState() => _OwnerState();
 }
 
 class _OwnerState extends State<Owner> with TickerProviderStateMixin {
+  ShopApi _shopApi =ShopApi();
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);
@@ -32,7 +35,7 @@ class _OwnerState extends State<Owner> with TickerProviderStateMixin {
                 if (value == 0) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Owner()),
+                    MaterialPageRoute(builder: (context) => Owner(shopId: widget.shopId,)),
                   );
                 } else {
                   Navigator.push(
@@ -62,28 +65,33 @@ class _OwnerState extends State<Owner> with TickerProviderStateMixin {
             SizedBox(
               height: 10,
             ),
-            ListTile(
-              //mainAxisAlignment: MainAxisAlignment.start,
+            FutureBuilder(
+              future: _shopApi.getOneShop(widget.shopId),
+              builder: (context,snapshot) {
+                return ListTile(
+                  //mainAxisAlignment: MainAxisAlignment.start,
 
-              leading:
-              CircleAvatar(
-                radius: 32,
-                backgroundColor: Colors.tealAccent,
-                child: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/images/salon.jpg'),
-                ),
-              ),
-              title: Text("Salon Name",style:TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                //letterSpacing: 1,
-              ),),
-              trailing: Text("stutus",style: TextStyle(
-                color: CupertinoColors.lightBackgroundGray,
-              ),),
+                  leading:
+                  CircleAvatar(
+                    radius: 32,
+                    backgroundColor: Colors.tealAccent,
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: AssetImage('assets/images/salon.jpg'),
+                    ),
+                  ),
+                  title: Text("Salon Name", style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    //letterSpacing: 1,
+                  ),),
+                  trailing: Text("stutus", style: TextStyle(
+                    color: CupertinoColors.lightBackgroundGray,
+                  ),),
 
+                );
+              }
             ),
 
             const Divider(
